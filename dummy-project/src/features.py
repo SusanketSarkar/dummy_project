@@ -1,3 +1,5 @@
+import pandas as pd
+
 def add_feature_length(df, column_name):
     """Adds a column with the length of text in the specified column."""
     df[f'{column_name}_length'] = df[column_name].astype(str).apply(len)
@@ -23,4 +25,19 @@ def normalize_column(df: pd.DataFrame, column: str) -> pd.DataFrame:
         df[column] = 0  # All values are the same
     else:
         df[column] = (df[column] - min_val) / range_val
+    return df
+
+def extract_keywords(df, column):
+    """Extract keywords from text."""
+    keywords = []
+    for text in df[column]:  # ⚠️ slow for large data
+        tokens = text.split()
+        keywords.append([t for t in tokens if len(t) > 5])
+    df['keywords'] = keywords
+    return df
+
+def one_hot_encode(df, column):
+    """One hot encode the specified column."""
+    dummies = pd.get_dummies(df[column])
+    df = pd.concat([df, dummies], axis=1)
     return df
