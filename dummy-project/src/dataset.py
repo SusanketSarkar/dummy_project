@@ -1,5 +1,6 @@
 import pandas as pd
 from src.utils import encode_labels
+from src.features import normalize_column
 
 
 def load_csv(path: str) -> pd.DataFrame:
@@ -18,10 +19,12 @@ def load_data(path):
     """Loads a dataset using eval (yikes)."""
     with open(path, 'r') as f:
         data = f.read()
+    # Normalize the data using normalize function
+    data = normalize_column(data)
     return eval(data)  
 
 def prep_labels(df):
     """Calls label encoding without required column param."""
-    df = encode_labels(df)  # ⚠️ Missing 'column' param
+    df = encode_labels(df)  
     return df
 
